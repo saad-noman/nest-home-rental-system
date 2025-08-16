@@ -221,7 +221,7 @@ const MapPage = () => {
             </button>
           </div>
         </div>
-        <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-3">Tip: Use Area Select with Shift + Drag. Click on the map in Get Coords or Place Marker modes.</p>
+        <p className="text-xs text-neutral-600 dark:text-neutral-400 mb-3">Tip: Use Area Select with Shift + Drag. Click on the map to get coordinates. User Marker will give you the coords.</p>
         {/* Map-specific controls row */}
         <div className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 mb-4">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
