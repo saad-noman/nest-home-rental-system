@@ -4,6 +4,8 @@
 
 NEST is a full-stack web application built with the **MERN** (MongoDB, Express, React, Node.js) stack that simplifies the home rental process. The platform allows homeowners to list rental properties and tenants to browse, book, and pay rent online. Role-based access provides dedicated dashboards for owners and tenants, while integrated features like booking requests, rent payment tracking, and an interactive map enhance the user experience.
 
+![image_alt](https://github.com/saad-noman/nest-home-rental-system/blob/7d54a6860a5d2137f80d52f71721ca6b1938a213/nest_overview.jpg)
+
 ---
 
 ## Features ✨
