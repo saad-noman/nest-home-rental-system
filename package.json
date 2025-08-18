@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "start": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
