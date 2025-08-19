@@ -43,21 +43,28 @@ const limiter = rateLimit({
 });
 app.use('/api/auth', limiter);
 
-// CORS configuration (support common dev origins and env override)
+// CORS configuration
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
-  'http://127.0.0.1:3000'
+  'http://127.0.0.1:3000',
+  /https:\/\/.*\.vercel\.app$/
 ].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., mobile apps, curl) and allowed dev origins
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    // Allow requests with no origin (e.g., mobile apps, curl)
+    if (!origin) return callback(null, true);
+    
+    // Check string origins
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    
+    // Check regex patterns (Vercel domains)
+    const regexOrigin = allowedOrigins.find(o => o instanceof RegExp && o.test(origin));
+    if (regexOrigin) return callback(null, true);
+    
     // Fallback: allow other origins in development
     if (process.env.NODE_ENV !== 'production') {
       return callback(null, true);
