@@ -1,13 +1,4 @@
-const API_BASE_URL = 'https://nest-home-rental-system.onrender.com/api';
-
-// Helper function to handle API responses
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: `${response.status} ${response.statusText}` }));
-    throw new Error(error.message || `${response.status} ${response.statusText}`);
-  }
-  return response.json();
-};
+import fetchApi from './apiConfig';
 
 // Top-rated properties
 export const getTopRatedProperties = async (params = {}) => {
@@ -17,87 +8,56 @@ export const getTopRatedProperties = async (params = {}) => {
       searchParams.append(key, params[key]);
     }
   });
-  const response = await fetch(`${API_BASE_URL}/properties/top-rated?${searchParams}`);
-  return handleResponse(response);
+  return fetchApi(`/properties/top-rated?${searchParams}`);
 };
 
 // Auth API functions
 export const login = async (email, password) => {
-  const response = await fetch(`${API_BASE_URL}/auth/login`, {
+  return fetchApi('/auth/login', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify({ email, password }),
   });
-  return handleResponse(response);
 };
 
 export const createMonthlyPayment = async ({ bookingId, month, year, monthName, amount, totalExpected, paymentMethod = 'credit_card' }) => {
-  const response = await fetch(`${API_BASE_URL}/transactions/monthly-pay`, {
+  return fetchApi('/transactions/monthly-pay', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-    body: JSON.stringify({ bookingId, month, year, monthName, amount, totalExpected, paymentMethod }),
+    body: JSON.stringify({ bookingId, month, year, monthName, amount, totalExpected, paymentMethod })
   });
-  return handleResponse(response);
 };
 
 export const deleteTransaction = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/transactions/${id}`, {
+  return fetchApi(`/transactions/${id}`, {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const getTransactionsByProperty = async (propertyId) => {
-  const response = await fetch(`${API_BASE_URL}/transactions/property/${propertyId}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/transactions/property/${propertyId}`);
 };
 
 export const register = async (userData) => {
-  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+  return fetchApi('/auth/register', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify(userData),
   });
-  return handleResponse(response);
 };
 
 export const logout = async () => {
-  const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+  return fetchApi('/auth/logout', {
     method: 'POST',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const getCurrentUser = async () => {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi('/auth/me');
 };
 
 export const updateProfile = async (profileData) => {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  return fetchApi('/auth/me', {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify(profileData),
   });
-  return handleResponse(response);
 };
 
 // Property API functions
@@ -109,8 +69,7 @@ export const getProperties = async (params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/properties?${searchParams}`);
-  return handleResponse(response);
+  return fetchApi(`/properties?${searchParams}`);
 };
 
 export const searchProperties = async (params = {}) => {
@@ -118,40 +77,27 @@ export const searchProperties = async (params = {}) => {
 };
 
 export const getProperty = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/properties/${id}`);
-  return handleResponse(response);
+  return fetchApi(`/properties/${id}`);
 };
 
 export const createProperty = async (propertyData) => {
-  const response = await fetch(`${API_BASE_URL}/properties`, {
+  return fetchApi('/properties', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify(propertyData),
   });
-  return handleResponse(response);
 };
 
 export const updateProperty = async (id, propertyData) => {
-  const response = await fetch(`${API_BASE_URL}/properties/${id}`, {
+  return fetchApi(`/properties/${id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify(propertyData),
   });
-  return handleResponse(response);
 };
 
 export const deleteProperty = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/properties/${id}`, {
+  return fetchApi(`/properties/${id}`, {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const getPropertiesByOwner = async (ownerId, params = {}) => {
@@ -162,21 +108,15 @@ export const getPropertiesByOwner = async (ownerId, params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/properties/owner/${ownerId}?${searchParams}`);
-  return handleResponse(response);
+  return fetchApi(`/properties/owner/${ownerId}?${searchParams}`);
 };
 
 // Booking API functions
 export const createBooking = async (bookingData) => {
-  const response = await fetch(`${API_BASE_URL}/bookings`, {
+  return fetchApi('/bookings', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify(bookingData),
   });
-  return handleResponse(response);
 };
 
 export const getMyBookings = async (params = {}) => {
@@ -187,43 +127,28 @@ export const getMyBookings = async (params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/bookings/my?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/bookings/my?${searchParams}`);
 };
 
 export const updateBookingStatus = async (id, status, rejectionReason = '') => {
-  const response = await fetch(`${API_BASE_URL}/bookings/${id}/status`, {
+  return fetchApi(`/bookings/${id}/status`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify({ status, rejectionReason }),
   });
-  return handleResponse(response);
 };
 
 export const cancelBooking = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/bookings/${id}/cancel`, {
+  return fetchApi(`/bookings/${id}/cancel`, {
     method: 'PUT',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 // Review API functions
 export const createReview = async (reviewData) => {
-  const response = await fetch(`${API_BASE_URL}/reviews`, {
+  return fetchApi('/reviews', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify(reviewData),
   });
-  return handleResponse(response);
 };
 
 export const getPropertyReviews = async (propertyId, params = {}) => {
@@ -234,8 +159,7 @@ export const getPropertyReviews = async (propertyId, params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/reviews/property/${propertyId}?${searchParams}`);
-  return handleResponse(response);
+  return fetchApi(`/reviews/property/${propertyId}?${searchParams}`);
 };
 
 export const getMyReviews = async (params = {}) => {
@@ -246,44 +170,30 @@ export const getMyReviews = async (params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/reviews/my?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/reviews/my?${searchParams}`);
 };
 
 // User API functions
 export const getUser = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/users/${id}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/users/${id}`);
 };
 
 // Favourites API (tenant)
 export const getMyFavourites = async () => {
-  const response = await fetch(`${API_BASE_URL}/users/me/favourites`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi('/users/me/favourites');
 };
 
 export const addFavourite = async ({ itemId, itemType }) => {
-  const response = await fetch(`${API_BASE_URL}/users/me/favourites`, {
+  return fetchApi('/users/me/favourites', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
     body: JSON.stringify({ itemId, itemType }),
   });
-  return handleResponse(response);
 };
 
 export const removeFavourite = async ({ itemType, itemId }) => {
-  const response = await fetch(`${API_BASE_URL}/users/me/favourites/${itemType}/${itemId}`, {
+  return fetchApi(`/users/me/favourites/${itemType}/${itemId}`, {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const getUsers = async (params = {}) => {
@@ -294,8 +204,7 @@ export const getUsers = async (params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/users?${searchParams}`);
-  return handleResponse(response);
+  return fetchApi(`/users?${searchParams}`);
 };
 
 // Transaction API functions
@@ -307,31 +216,21 @@ export const getMyTransactions = async (params = {}) => {
     }
   });
   
-  const response = await fetch(`${API_BASE_URL}/transactions/my?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/transactions/my?${searchParams}`);
 };
 
 export const processPayment = async (transactionId, paymentMethod = 'credit_card', desiredStatus) => {
-  const response = await fetch(`${API_BASE_URL}/transactions/${transactionId}/pay`, {
+  return fetchApi(`/transactions/${transactionId}/pay`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify({ paymentMethod, desiredStatus }),
   });
-  return handleResponse(response);
 };
 
 // Auth deletion
 export const deleteCurrentUser = async () => {
-  const response = await fetch(`${API_BASE_URL}/auth/me`, {
+  return fetchApi('/auth/me', {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 // Notification API functions
@@ -342,86 +241,64 @@ export const getMyNotifications = async (params = {}) => {
       searchParams.append(key, params[key]);
     }
   });
-  const response = await fetch(`${API_BASE_URL}/notifications/my?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  
+  return fetchApi(`/notifications/my?${searchParams}`);
 };
 
 export const markNotificationRead = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/notifications/${id}/read`, {
+  return fetchApi(`/notifications/${id}/read`, {
     method: 'PUT',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const markNotificationUnread = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/notifications/${id}/unread`, {
+  return fetchApi(`/notifications/${id}/unread`, {
     method: 'PUT',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const markAllNotificationsRead = async () => {
-  const response = await fetch(`${API_BASE_URL}/notifications/read-all`, {
+  return fetchApi('/notifications/read-all', {
     method: 'PUT',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const markAllNotificationsUnread = async () => {
-  const response = await fetch(`${API_BASE_URL}/notifications/unread-all`, {
+  return fetchApi('/notifications/unread-all', {
     method: 'PUT',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 // Delete booking
 export const deleteBooking = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/bookings/${id}`, {
+  return fetchApi(`/bookings/${id}`, {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 // Delete rating
 export const deleteRating = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/ratings/${id}`, {
+  return fetchApi(`/ratings/${id}`, {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 export const deleteNotification = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/notifications/${id}`, {
+  return fetchApi(`/notifications/${id}`, {
     method: 'DELETE',
-    credentials: 'include',
   });
-  return handleResponse(response);
 };
 
 // Rating API functions
 export const createUserRating = async ({ rateeId, rating, comment = '', context }) => {
-  const response = await fetch(`${API_BASE_URL}/ratings`, {
+  return fetchApi('/ratings', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
     body: JSON.stringify({ rateeId, rating, comment, context }),
   });
-  return handleResponse(response);
 };
 
 export const getUserRatingSummary = async (userId) => {
-  const response = await fetch(`${API_BASE_URL}/ratings/${userId}/summary`);
-  return handleResponse(response);
+  return fetchApi(`/ratings/${userId}/summary`);
 };
 
 export const listUserRatings = async (userId, params = {}) => {
@@ -431,8 +308,8 @@ export const listUserRatings = async (userId, params = {}) => {
       searchParams.append(key, params[key]);
     }
   });
-  const response = await fetch(`${API_BASE_URL}/ratings/${userId}?${searchParams}`);
-  return handleResponse(response);
+  
+  return fetchApi(`/ratings/${userId}?${searchParams}`);
 };
 
 // Eligibility helpers
@@ -440,37 +317,25 @@ export const canRateUser = async (rateeId, context) => {
   const searchParams = new URLSearchParams();
   if (rateeId) searchParams.append('rateeId', rateeId);
   if (context) searchParams.append('context', context);
-  const response = await fetch(`${API_BASE_URL}/ratings/can-rate/check?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/ratings/can-rate/check?${searchParams}`);
 };
 
 export const canReviewProperty = async (propertyId) => {
   const searchParams = new URLSearchParams();
   if (propertyId) searchParams.append('propertyId', propertyId);
-  const response = await fetch(`${API_BASE_URL}/reviews/can-review/check?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/reviews/can-review/check?${searchParams}`);
 };
 
 export const canViewTenantContact = async (userId) => {
-  const response = await fetch(`${API_BASE_URL}/users/${userId}/can-view-contact`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  return fetchApi(`/users/${userId}/can-view-contact`);
 };
 
 // Leave Request API functions
 export const createLeaveRequest = async ({ bookingId, message }) => {
-  const response = await fetch(`${API_BASE_URL}/leave-requests`, {
+  return fetchApi('/leave-requests', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
     body: JSON.stringify({ bookingId, message }),
   });
-  return handleResponse(response);
 };
 
 export const listMyLeaveRequests = async (params = {}) => {
@@ -480,18 +345,13 @@ export const listMyLeaveRequests = async (params = {}) => {
       searchParams.append(key, params[key]);
     }
   });
-  const response = await fetch(`${API_BASE_URL}/leave-requests/my?${searchParams}`, {
-    credentials: 'include',
-  });
-  return handleResponse(response);
+  
+  return fetchApi(`/leave-requests/my?${searchParams}`);
 };
 
 export const decideLeaveRequest = async (id, { decision, condition, note }) => {
-  const response = await fetch(`${API_BASE_URL}/leave-requests/${id}/decision`, {
+  return fetchApi(`/leave-requests/${id}/decision`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
     body: JSON.stringify({ decision, condition, note }),
   });
-  return handleResponse(response);
 };

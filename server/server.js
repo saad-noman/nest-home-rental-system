@@ -43,25 +43,49 @@ const limiter = rateLimit({
 });
 app.use('/api/auth', limiter);
 
-// CORS configuration
-const isProduction = process.env.NODE_ENV === 'production';
+// CORS configuration with enhanced debugging
+const whitelist = [
+  'https://nest-home-rental-system.vercel.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://nest-home-rental-system.onrender.com'
+];
 
-app.use(cors({
-  origin: isProduction 
-    ? [
-        'https://nest-home-rental-system.vercel.app',
-        'https://nest-home-rental-system.onrender.com'
-      ]
-    : [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000'
-      ],
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Log the origin for debugging
+    console.log('Request origin:', origin);
+    
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn('CORS blocked for origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+  exposedHeaders: ['Content-Range', 'X-Total-Count']
+};
+
+// Enable CORS pre-flight for all routes
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
+
+// Log CORS headers for debugging
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Authorization');
+  next();
+});
 
 // Body parsing middleware (increase limit for base64 images)
 app.use(express.json({ limit: '25mb' }));
