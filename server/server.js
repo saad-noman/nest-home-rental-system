@@ -69,23 +69,18 @@ const corsOptions = {
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
-  exposedHeaders: ['Content-Range', 'X-Total-Count']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'X-Requested-With', 'X-HTTP-Method-Override', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Total-Count'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
-// Enable CORS pre-flight for all routes
-app.options('*', cors(corsOptions));
+// Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Log CORS headers for debugging
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Authorization');
-  next();
-});
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Body parsing middleware (increase limit for base64 images)
 app.use(express.json({ limit: '25mb' }));
