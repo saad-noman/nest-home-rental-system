@@ -43,30 +43,24 @@ const limiter = rateLimit({
 });
 app.use('/api/auth', limiter);
 
-// CORS configuration (support common dev origins and env override)
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000'
-].filter(Boolean);
+// CORS configuration
+const isProduction = process.env.NODE_ENV === 'production';
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., mobile apps, curl) and allowed dev origins
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    // Fallback: allow other origins in development
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: isProduction 
+    ? [
+        'https://nest-home-rental-system.vercel.app',
+        'https://nest-home-rental-system.onrender.com'
+      ]
+    : [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000'
+      ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 }));
 
 // Body parsing middleware (increase limit for base64 images)
