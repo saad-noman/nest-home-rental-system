@@ -81,21 +81,17 @@ const Notifications = () => {
   };
 
   const toggleSelect = (id) => {
-    console.log('Toggling notification:', id);
     setSelectedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
-        console.log('Removing from selection:', id);
         next.delete(id);
       } else {
-        console.log('Adding to selection:', id);
         next.add(id);
       }
-      console.log('New selection:', Array.from(next));
       return next;
     });
     // Individual toggles should not mark select-all as explicitly checked
-    setSelectAllExplicit(false);
+    setSelectAllState('partial');
   };
 
   const allSelected = items.length > 0 && selectedIds.size === items.length;
@@ -172,7 +168,7 @@ const Notifications = () => {
             </button>
             <button
               onClick={handleMarkAllToggle}
-              className={`p-1.5 rounded-lg ${hasUnread ? 'bg-primary-600 text-white hover:bg-primary-700' : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600'}`}
+              className={`p-1.5 rounded-lg ${hasUnread ? 'bg-cyan-600 text-white hover:bg-cyan-700' : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-600'}`}
               title={hasUnread ? 'Mark all as read' : 'Mark all as unread'}
               aria-label={hasUnread ? 'Mark all as read' : 'Mark all as unread'}
             >
@@ -264,7 +260,7 @@ const Notifications = () => {
                   ? 'bg-green-50 dark:bg-green-900/20 border-green-300 dark:border-green-800'
                   : n.read
                     ? 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
-                    : 'bg-blue-50/60 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800'
+                    : 'bg-cyan-50/60 dark:bg-cyan-900/30 border-cyan-200 dark:border-cyan-800'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -280,7 +276,6 @@ const Notifications = () => {
                           }`}
                           checked={selectedIds.has(n._id)}
                           onChange={(e) => {
-                            console.log('Checkbox changed:', e.target.checked, 'for notification:', n._id);
                             toggleSelect(n._id);
                             e.stopPropagation();
                           }}
@@ -313,7 +308,7 @@ const Notifications = () => {
                         href={n.link}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 underline decoration-transparent hover:decoration-current underline-offset-4 decoration-2 transition-colors text-sm"
+                        className="inline-flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 underline decoration-transparent hover:decoration-current underline-offset-4 decoration-2 transition-colors text-sm"
                         title="View"
                         aria-label="View"
                       >
@@ -324,7 +319,7 @@ const Notifications = () => {
                     {!n.read ? (
                       <button
                         onClick={() => handleMarkRead(n._id)}
-                        className="p-1.5 rounded-md border border-primary-200 dark:border-primary-800 text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+                        className="p-1.5 rounded-md border border-cyan-200 dark:border-cyan-800 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20"
                         title="Mark as read"
                         aria-label="Mark as read"
                       >

@@ -8,7 +8,7 @@ const badge = (status) => {
     case 'Available': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
     case 'Booked': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
     case 'Under Construction': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-    case 'Pre-booking Available': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+    case 'Pre-booking Available': return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200';
     default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
   }
 };
@@ -46,7 +46,7 @@ const OwnerProperties = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {properties.map((property) => (
-              <Link key={property._id} to={`/properties/${property._id}`} className="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow">
+              <Link key={property._id} to={`/properties/${property._id}`} className="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow border border-neutral-200 dark:border-neutral-700">
                 <div className="relative">
                   <img src={property.images?.[0] || '/api/placeholder/400/300'} alt={property.title} className="w-full h-48 object-cover" />
                   <span className={`absolute top-2 left-2 px-2 py-1 text-xs font-medium rounded-full shadow ${badge(property.availabilityStatus || property.availability)}`}>

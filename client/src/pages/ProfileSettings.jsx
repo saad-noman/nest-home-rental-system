@@ -52,7 +52,7 @@ const ProfileSettings = () => {
         </div>
 
         {/* Profile form */}
-        <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-8 border border-neutral-200 dark:border-neutral-700">
           <form onSubmit={onSave} className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="md:col-span-1 flex items-center justify-center">
               <div className="w-28 h-28 rounded-full bg-neutral-200 dark:bg-neutral-700 overflow-hidden flex items-center justify-center">
@@ -122,7 +122,7 @@ const ProfileSettings = () => {
 
         {/* Owner property management */}
         {isOwner && (
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-neutral-900 dark:text-white flex items-center"><Building2 className="h-5 w-5 mr-2" /> My Properties</h2>
               <button
@@ -147,7 +147,7 @@ const ProfileSettings = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <button onClick={() => navigate(`/properties/${p._id}`)} className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-cyan-600"><Eye className="h-4 w-4" /></button>
-                      <button onClick={() => navigate(`/properties/${p._id}/edit`)} className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-blue-600"><Edit className="h-4 w-4" /></button>
+                      <button onClick={() => navigate(`/properties/${p._id}/edit`)} className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-cyan-600"><Edit className="h-4 w-4" /></button>
                     </div>
                   </div>
                 ))}

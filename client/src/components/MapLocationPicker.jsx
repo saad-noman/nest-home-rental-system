@@ -34,7 +34,7 @@ const createHouseIcon = (availability) => {
     'Available': '#10b981', // green
     'Booked': '#ef4444', // red
     'Under Construction': '#f59e0b', // yellow
-    'Pre-booking Available': '#3b82f6', // blue
+    'Pre-booking Available': '#06b6d4', // cyan
   };
   
   const color = colors[availability] || '#6b7280'; // gray default
@@ -253,10 +253,10 @@ const MapLocationPicker = ({
       {/* Tools row */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-neutral-600 dark:text-neutral-300">Map Tools:</span>
-        <button type="button" onClick={() => setToolMode('marker')} className={`px-3 py-2 rounded ${toolMode==='marker' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Place Marker</button>
-        <button type="button" onClick={() => setToolMode('coords')} className={`px-3 py-2 rounded ${toolMode==='coords' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Get Coords</button>
-        <button type="button" onClick={() => setToolMode('rectangle')} className={`px-3 py-2 rounded ${toolMode==='rectangle' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Area Select</button>
-        <button type="button" onClick={() => setToolMode('none')} className={`px-3 py-2 rounded ${toolMode==='none' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Browse</button>
+        <button type="button" onClick={() => setToolMode('marker')} className={`px-3 py-2 rounded border ${toolMode==='marker' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Place Marker</button>
+        <button type="button" onClick={() => setToolMode('coords')} className={`px-3 py-2 rounded border ${toolMode==='coords' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Get Coords</button>
+        <button type="button" onClick={() => setToolMode('rectangle')} className={`px-3 py-2 rounded border ${toolMode==='rectangle' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Area Select</button>
+        <button type="button" onClick={() => setToolMode('none')} className={`px-3 py-2 rounded border ${toolMode==='none' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Browse</button>
       </div>
       {showSearch && (
         <div className="relative">

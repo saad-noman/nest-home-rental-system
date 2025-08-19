@@ -85,7 +85,6 @@ export function startRemindersScheduler() {
   const oneHour = 60 * 60 * 1000;
   // Run every 12 hours to be resilient (it’ll self-throttle to every other day using daysSinceEnd % 2)
   intervalId = setInterval(checkMonthlyDuesAndNotify, 12 * oneHour);
-  console.log('Reminder scheduler started');
 }
 
 export function stopRemindersScheduler() {

@@ -53,10 +53,10 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 py-20 px-4 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-cyan-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 py-20 px-4 overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-200/30 dark:bg-primary-800/20 rounded-full blur-3xl"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-200/30 dark:bg-cyan-800/20 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary-200/30 dark:bg-secondary-800/20 rounded-full blur-3xl"></div>
         </div>
         
@@ -75,8 +75,8 @@ const Home = () => {
                 to="/properties"
                 className="group bg-white dark:bg-neutral-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-8 text-center hover:scale-105 w-full sm:w-auto min-w-[250px]"
               >
-                <div className="bg-primary-100 dark:bg-primary-900/30 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-                  <Search className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                <div className="bg-cyan-100 dark:bg-cyan-900/30 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+                  <Search className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
                 </div>
                 <h3 className="text-xl font-bold text-neutral-900 dark:text-white mb-2">
                   Browse Properties
@@ -121,8 +121,8 @@ const Home = () => {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center group">
-              <div className="bg-primary-100 dark:bg-primary-900/30 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-                <Building2 className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+              <div className="bg-cyan-100 dark:bg-cyan-900/30 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
+                <Building2 className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
               </div>
               <div className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">
                 {stats.properties}+
@@ -216,11 +216,11 @@ const Home = () => {
                   
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-3">
-                      <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      <h3 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                         {property.title}
                       </h3>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+                        <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
                           ${property.price}
                         </div>
                         <div className="text-sm text-neutral-500">/month</div>
@@ -279,8 +279,8 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center group">
-              <div className="bg-primary-100 dark:bg-primary-900/30 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
-                <Search className="w-10 h-10 text-primary-600 dark:text-primary-400" />
+              <div className="bg-cyan-100 dark:bg-cyan-900/30 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-200">
+                <Search className="w-10 h-10 text-cyan-600 dark:text-cyan-400" />
               </div>
               <h3 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
                 Search & Discover

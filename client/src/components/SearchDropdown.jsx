@@ -85,7 +85,7 @@ const SearchDropdown = ({ query, onClose }) => {
                     <p className="text-sm text-neutral-600 dark:text-neutral-400 truncate">
                       {property.location}
                     </p>
-                    <p className="text-sm font-semibold text-primary-600 dark:text-primary-400">
+                    <p className="text-sm font-semibold text-cyan-600 dark:text-cyan-400">
                       ${property.price}/month
                     </p>
                   </div>
@@ -108,7 +108,7 @@ const SearchDropdown = ({ query, onClose }) => {
                   onClick={onClose}
                   className="flex items-center space-x-3 px-3 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all duration-200"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-secondary-500 rounded-full flex items-center justify-center text-white font-semibold">
                     {owner.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1">
@@ -119,7 +119,7 @@ const SearchDropdown = ({ query, onClose }) => {
                       {owner.email}
                     </p>
                   </div>
-                  <span className="px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs rounded-full">
+                  <span className="px-2 py-1 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 text-xs rounded-full">
                     Owner
                   </span>
                 </Link>
