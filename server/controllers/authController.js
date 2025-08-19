@@ -82,7 +82,7 @@ export const deleteCurrentUser = async (req, res) => {
     res.clearCookie('token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: 'strict',
       path: '/'
     });
     return res.json({ message: 'Account and related data deleted successfully' });
@@ -98,9 +98,8 @@ export const deleteCurrentUser = async (req, res) => {
 const setTokenCookie = (res, token) => {
   const cookieOptions = {
     httpOnly: true,
-    // Required for cross-site cookies from Vercel -> Render
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/'
   };
@@ -224,7 +223,7 @@ export const logout = (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    sameSite: 'strict',
     path: '/'
   });
   
