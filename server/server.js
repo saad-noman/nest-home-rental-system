@@ -25,9 +25,6 @@ import connectDB from './config/db.js';
 // Load environment variables
 dotenv.config();
 
-// Connect to database
-connectDB();
-
 const app = express();
 
 // Trust proxy for correct protocol/secure cookies on Render/Proxies
@@ -120,14 +117,22 @@ app.use('*', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`);
-  console.log(`Server started at: ${new Date().toISOString()}`);
-  // Start background schedulers (e.g., due payment reminders)
-  try {
-    startRemindersScheduler();
-  } catch (e) {
-    console.error('Failed to start schedulers:', e?.message || e);
-  }
-});
+// Ensure DB connection before accepting requests to avoid hanging queries
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Environment: ${process.env.NODE_ENV}`);
+      console.log(`Server started at: ${new Date().toISOString()}`);
+      // Start background schedulers (e.g., due payment reminders)
+      try {
+        startRemindersScheduler();
+      } catch (e) {
+        console.error('Failed to start schedulers:', e?.message || e);
+      }
+    });
+  })
+  .catch((err) => {
+    console.error('Failed to connect to MongoDB. Server not started.', err?.message || err);
+    process.exit(1);
+  });

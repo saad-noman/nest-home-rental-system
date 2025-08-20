@@ -9,13 +9,26 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // Prevent requests from hanging forever; surface network issues quickly
+  timeout: 15000,
 });
 
 // Response interceptor to handle errors consistently
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   (error) => {
     const message = error.response?.data?.message || error.message || 'An error occurred';
+    // Helpful for debugging network/CORS/proxy issues during development
+    if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console
+      console.error('API request failed:', {
+        url: error.config?.url,
+        method: error.config?.method,
+        baseURL: error.config?.baseURL,
+        status: error.response?.status,
+        message,
+      });
+    }
     throw new Error(message);
   }
 );
