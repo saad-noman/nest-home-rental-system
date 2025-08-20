@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import { Search, Copy, MapPin, Home } from 'lucide-react';
+import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -203,11 +204,16 @@ const MapLocationPicker = ({
 
     setIsSearching(true);
     try {
-      // Using Nominatim (OpenStreetMap) geocoding service
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=bd`
-      );
-      const results = await response.json();
+      // Using Nominatim (OpenStreetMap) geocoding service with axios
+      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          format: 'json',
+          q: query,
+          limit: 5,
+          countrycodes: 'bd'
+        }
+      });
+      const results = response.data;
       setSearchResults(results.map(result => ({
         display_name: result.display_name,
         lat: parseFloat(result.lat),

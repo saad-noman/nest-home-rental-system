@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, ChevronDown, Filter } from 'lucide-react';
+import axios from 'axios';
 import MapComponent from '../components/MapComponent';
 import { getProperties } from '../utils/api';
 
@@ -82,9 +83,16 @@ const MapPage = () => {
       if (!geoQuery || geoQuery.trim().length < 2) { setGeoResults([]); return; }
       try {
         setGeoLoading(true);
-        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(geoQuery)}`;
-        const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
-        const data = await res.json();
+        const res = await axios.get('https://nominatim.openstreetmap.org/search', {
+          params: {
+            format: 'json',
+            addressdetails: 1,
+            limit: 5,
+            q: geoQuery
+          },
+          headers: { 'Accept-Language': 'en' }
+        });
+        const data = res.data;
         if (!abort) setGeoResults(Array.isArray(data) ? data : []);
       } catch (e) {
         if (!abort) setGeoResults([]);

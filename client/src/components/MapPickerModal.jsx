@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { X, MapPin, Search } from 'lucide-react';
+import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -75,10 +76,15 @@ const MapPickerModal = ({
 
     setIsSearching(true);
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=bd`
-      );
-      const results = await response.json();
+      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          format: 'json',
+          q: query,
+          limit: 5,
+          countrycodes: 'bd'
+        }
+      });
+      const results = response.data;
       setSearchResults(results.map(result => ({
         display_name: result.display_name,
         lat: parseFloat(result.lat),

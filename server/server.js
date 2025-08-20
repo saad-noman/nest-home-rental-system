@@ -30,6 +30,9 @@ connectDB();
 
 const app = express();
 
+// Trust proxy for correct protocol/secure cookies on Render/Proxies
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: false // Allow inline styles for development
@@ -43,37 +46,25 @@ const limiter = rateLimit({
 });
 app.use('/api/auth', limiter);
 
-// CORS configuration
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-  /https:\/\/.*\.vercel\.app$/
-].filter(Boolean);
-
+// Simple CORS configuration for deployment compatibility
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., mobile apps, curl)
+    const allowed = [
+      'http://localhost:3000',
+      'http://localhost:3001', 
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      process.env.FRONTEND_URL,
+      'https://nest-home-rental-system.vercel.app'
+    ].filter(Boolean);
+    // Allow server-to-server or curl with no Origin
     if (!origin) return callback(null, true);
-    
-    // Check string origins
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    
-    // Check regex patterns (Vercel domains)
-    const regexOrigin = allowedOrigins.find(o => o instanceof RegExp && o.test(origin));
-    if (regexOrigin) return callback(null, true);
-    
-    // Fallback: allow other origins in development
-    if (process.env.NODE_ENV !== 'production') {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
+    if (allowed.includes(origin)) return callback(null, true);
+    return callback(new Error('CORS not allowed for this origin'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
 // Body parsing middleware (increase limit for base64 images)
@@ -132,6 +123,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
+  console.log(`Server started at: ${new Date().toISOString()}`);
   // Start background schedulers (e.g., due payment reminders)
   try {
     startRemindersScheduler();

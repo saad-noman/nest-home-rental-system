@@ -61,7 +61,7 @@ const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off" noValidate>
+          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="on" noValidate>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                 Email Address
@@ -75,7 +75,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  autoComplete="off"
+                  autoComplete="email"
                   spellCheck={false}
                   autoCapitalize="none"
                   autoCorrect="off"
@@ -99,7 +99,7 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  autoComplete="new-password"
+                  autoComplete="current-password"
                   spellCheck={false}
                   autoCapitalize="none"
                   autoCorrect="off"
