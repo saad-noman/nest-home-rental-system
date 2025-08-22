@@ -44,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-cyan-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
       <div className="w-full max-w-md">
         <div className="card p-8 animate-slide-up">
           <div className="text-center mb-8">
@@ -61,7 +61,7 @@ const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="on" noValidate>
+          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off" noValidate>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
                 Email Address
@@ -75,12 +75,12 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  autoComplete="email"
+                  autoComplete="off"
                   spellCheck={false}
                   autoCapitalize="none"
                   autoCorrect="off"
                   inputMode="email"
-                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 px-4 py-3 pl-11 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 px-4 py-3 pl-11 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="Enter your email"
                 />
               </div>
@@ -99,11 +99,11 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   spellCheck={false}
                   autoCapitalize="none"
                   autoCorrect="off"
-                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 px-4 py-3 pl-11 pr-11 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="w-full rounded-md border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 px-4 py-3 pl-11 pr-11 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="Enter your password"
                 />
                 <button
@@ -137,7 +137,7 @@ const Login = () => {
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors"
+                className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
               >
                 Sign up here
               </Link>

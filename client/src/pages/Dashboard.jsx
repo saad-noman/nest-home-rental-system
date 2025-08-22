@@ -38,7 +38,7 @@ const getBookingStatusColor = (status) => {
     case 'rejected':
       return 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300';
     case 'completed':
-      return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300';
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300';
     default:
       return 'bg-gray-100 text-gray-800 dark:bg-gray-900/40 dark:text-gray-300';
   }
@@ -61,7 +61,7 @@ const getTenantResidenceStatus = (booking) => {
   endDay.setHours(0, 0, 0, 0);
 
   if (today < startDay) {
-    return { status: 'Upcoming Residence', color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300' };
+    return { status: 'Upcoming Residence', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300' };
   } else if (today > endDay) {
     return { status: 'Past Residence', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' };
   } else {
@@ -400,7 +400,7 @@ const Dashboard = () => {
             <div className="h-8 bg-neutral-200 dark:bg-neutral-700 rounded w-1/4 mb-6"></div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
+                <div key={i} className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
                   <div className="h-4 bg-neutral-200 dark:bg-neutral-700 rounded mb-2"></div>
                   <div className="h-8 bg-neutral-200 dark:bg-neutral-700 rounded"></div>
                 </div>
@@ -495,7 +495,7 @@ const Dashboard = () => {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {user?.role === 'owner' && (
-            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
+            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
               <div className="flex items-center">
                 <div className="p-2 bg-cyan-100 dark:bg-cyan-900 rounded-lg">
                   <Building2 className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
@@ -512,7 +512,7 @@ const Dashboard = () => {
             </div>
           )}
           
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
                 <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -528,7 +528,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
                 <Star className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
@@ -544,7 +544,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
                 <DollarSign className="h-6 w-6 text-purple-600 dark:text-purple-400" />
@@ -674,7 +674,7 @@ const Dashboard = () => {
                           </Link>
                           <Link
                             to={`/properties/${property._id}/edit`}
-                            className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-cyan-600 dark:hover:text-cyan-400"
+                            className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400"
                           >
                             <Edit className="h-4 w-4" />
                           </Link>

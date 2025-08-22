@@ -75,7 +75,7 @@ const Properties = () => {
       case 'Under Construction':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'Pre-booking Available':
-        return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
@@ -114,7 +114,7 @@ const Properties = () => {
             {user?.role === 'owner' && (
               <button
                 onClick={() => navigate('/properties/new')}
-                className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-medium transition-colors"
+                className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
               >
                 + Add Property
               </button>
@@ -146,7 +146,7 @@ const Properties = () => {
 
         {/* Filters */}
         {showFilters && (
-          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-8 border border-neutral-200 dark:border-neutral-700">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
@@ -256,7 +256,7 @@ const Properties = () => {
               <Link
                 key={property._id}
                 to={`/properties/${property._id}`}
-                className={`bg-white dark:bg-neutral-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow border border-neutral-200 dark:border-neutral-700 ${
+                className={`bg-white dark:bg-neutral-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow ${
                   viewMode === 'list' ? 'flex' : 'block'
                 }`}
               >

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import { Search, Copy, MapPin, Home } from 'lucide-react';
-import axios from 'axios';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -35,7 +34,7 @@ const createHouseIcon = (availability) => {
     'Available': '#10b981', // green
     'Booked': '#ef4444', // red
     'Under Construction': '#f59e0b', // yellow
-    'Pre-booking Available': '#06b6d4', // cyan
+    'Pre-booking Available': '#3b82f6', // blue
   };
   
   const color = colors[availability] || '#6b7280'; // gray default
@@ -204,16 +203,11 @@ const MapLocationPicker = ({
 
     setIsSearching(true);
     try {
-      // Using Nominatim (OpenStreetMap) geocoding service with axios
-      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-        params: {
-          format: 'json',
-          q: query,
-          limit: 5,
-          countrycodes: 'bd'
-        }
-      });
-      const results = response.data;
+      // Using Nominatim (OpenStreetMap) geocoding service
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&countrycodes=bd`
+      );
+      const results = await response.json();
       setSearchResults(results.map(result => ({
         display_name: result.display_name,
         lat: parseFloat(result.lat),
@@ -259,10 +253,10 @@ const MapLocationPicker = ({
       {/* Tools row */}
       <div className="flex items-center gap-2">
         <span className="text-sm text-neutral-600 dark:text-neutral-300">Map Tools:</span>
-        <button type="button" onClick={() => setToolMode('marker')} className={`px-3 py-2 rounded border ${toolMode==='marker' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Place Marker</button>
-        <button type="button" onClick={() => setToolMode('coords')} className={`px-3 py-2 rounded border ${toolMode==='coords' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Get Coords</button>
-        <button type="button" onClick={() => setToolMode('rectangle')} className={`px-3 py-2 rounded border ${toolMode==='rectangle' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Area Select</button>
-        <button type="button" onClick={() => setToolMode('none')} className={`px-3 py-2 rounded border ${toolMode==='none' ? 'bg-cyan-600 text-white border-cyan-600' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100 border-neutral-200 dark:border-neutral-600'}`}>Browse</button>
+        <button type="button" onClick={() => setToolMode('marker')} className={`px-3 py-2 rounded ${toolMode==='marker' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Place Marker</button>
+        <button type="button" onClick={() => setToolMode('coords')} className={`px-3 py-2 rounded ${toolMode==='coords' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Get Coords</button>
+        <button type="button" onClick={() => setToolMode('rectangle')} className={`px-3 py-2 rounded ${toolMode==='rectangle' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Area Select</button>
+        <button type="button" onClick={() => setToolMode('none')} className={`px-3 py-2 rounded ${toolMode==='none' ? 'bg-primary-600 text-white' : 'bg-neutral-100 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'}`}>Browse</button>
       </div>
       {showSearch && (
         <div className="relative">

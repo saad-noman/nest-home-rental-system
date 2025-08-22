@@ -218,7 +218,7 @@ const PropertyDetails = () => {
       case 'Under Construction':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
       case 'Pre-booking Available':
-        return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
@@ -329,7 +329,7 @@ const PropertyDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Property Details */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-6 border border-neutral-200 dark:border-neutral-700">
+            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-6">
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <h1 className="text-3xl font-bold text-neutral-900 dark:text-white mb-2">
@@ -367,7 +367,7 @@ const PropertyDetails = () => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => navigate(`/map?propertyId=${property._id}`)}
-                    className="inline-flex items-center px-3 py-1.5 rounded-md bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium transition-colors"
+                    className="inline-flex items-center px-3 py-1.5 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
                   >
                     View Location
                   </button>
@@ -403,7 +403,7 @@ const PropertyDetails = () => {
 
             {/* Owner Information */}
             {property.owner && (
-              <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-6 border border-neutral-200 dark:border-neutral-700">
+              <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 mb-6">
                 <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mb-4">
                   Property Owner
                 </h2>
@@ -456,7 +456,7 @@ const PropertyDetails = () => {
 
             {/* Reviews */}
             {reviews.length > 0 && (
-              <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 border border-neutral-200 dark:border-neutral-700">
+              <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-neutral-900 dark:text-white">
                     Reviews ({reviews.length})
@@ -500,7 +500,7 @@ const PropertyDetails = () => {
 
           {/* Booking / Owner Actions Card */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 sticky top-8 space-y-4 border border-neutral-200 dark:border-neutral-700">
+            <div className="bg-white dark:bg-neutral-800 rounded-lg shadow-md p-6 sticky top-8 space-y-4">
               {/* Owner actions if current user owns this property */}
               {user && (user.role === 'owner' || user.role === 'admin') && (String(property.owner?._id || property.owner) === String(user._id)) && (
                 <div>

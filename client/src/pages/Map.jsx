@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, ChevronDown, Filter } from 'lucide-react';
-import axios from 'axios';
 import MapComponent from '../components/MapComponent';
 import { getProperties } from '../utils/api';
 
@@ -83,16 +82,9 @@ const MapPage = () => {
       if (!geoQuery || geoQuery.trim().length < 2) { setGeoResults([]); return; }
       try {
         setGeoLoading(true);
-        const res = await axios.get('https://nominatim.openstreetmap.org/search', {
-          params: {
-            format: 'json',
-            addressdetails: 1,
-            limit: 5,
-            q: geoQuery
-          },
-          headers: { 'Accept-Language': 'en' }
-        });
-        const data = res.data;
+        const url = `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(geoQuery)}`;
+        const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+        const data = await res.json();
         if (!abort) setGeoResults(Array.isArray(data) ? data : []);
       } catch (e) {
         if (!abort) setGeoResults([]);
@@ -123,7 +115,7 @@ const MapPage = () => {
       case 'Available': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
       case 'Booked': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       case 'Under Construction': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'Pre-booking Available': return 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200';
+      case 'Pre-booking Available': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
   };
@@ -168,6 +160,7 @@ const MapPage = () => {
       setMapCenter([lat, lng]);
       setSelectedPropertyId(property._id);
     } else {
+      console.warn('Property has no usable coordinates:', property);
       setSelectedPropertyId(property._id);
     }
   };
@@ -372,7 +365,7 @@ const MapPage = () => {
                 { label: 'Available', color: '#16a34a' },
                 { label: 'Booked', color: '#dc2626' },
                 { label: 'Under Construction', color: '#f59e0b' },
-                { label: 'Pre-booking Available', color: '#06b6d4' },
+                { label: 'Pre-booking Available', color: '#2563eb' },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-2">
                   <span

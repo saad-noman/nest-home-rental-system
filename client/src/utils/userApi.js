@@ -1,49 +1,51 @@
-import axios from 'axios';
-
 const API_BASE_URL = '/api';
 
-// Create axios instance
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 15000,
-});
-
-// Response interceptor for error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const message = error.response?.data?.message || error.message || 'An error occurred';
-    if (import.meta.env.DEV) {
-      // eslint-disable-next-line no-console
-      console.error('User API request failed:', {
-        url: error.config?.url,
-        method: error.config?.method,
-        baseURL: error.config?.baseURL,
-        status: error.response?.status,
-        message,
-      });
-    }
-    throw new Error(message);
+// Helper function to handle API responses
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ message: 'An error occurred' }));
+    throw new Error(error.message || 'An error occurred');
   }
-);
+  return response.json();
+};
 
 // User API functions
 export const getUsers = async (params = {}) => {
-  return api.get('/users', { params });
+  const searchParams = new URLSearchParams();
+  Object.keys(params).forEach(key => {
+    if (params[key] !== undefined && params[key] !== '') {
+      searchParams.append(key, params[key]);
+    }
+  });
+  
+  const response = await fetch(`${API_BASE_URL}/users?${searchParams}`, {
+    credentials: 'include',
+  });
+  return handleResponse(response);
 };
 
 export const getUser = async (id) => {
-  return api.get(`/users/${id}`);
+  const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+    credentials: 'include',
+  });
+  return handleResponse(response);
 };
 
 export const searchUsers = async (query) => {
-  return api.get('/users/search', { params: { q: query } });
+  const response = await fetch(`${API_BASE_URL}/users/search?q=${encodeURIComponent(query)}`, {
+    credentials: 'include',
+  });
+  return handleResponse(response);
 };
 
 export const updateUserStatus = async (id, isActive) => {
-  return api.put(`/users/${id}/status`, { isActive });
+  const response = await fetch(`${API_BASE_URL}/users/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({ isActive }),
+  });
+  return handleResponse(response);
 };

@@ -9,7 +9,6 @@ import Review from '../models/Review.js';
 // @access Public
 export const getProperties = async (req, res) => {
   try {
-    // Extract query parameters with defaults
     const {
       page = 1,
       limit = 12,
@@ -17,76 +16,113 @@ export const getProperties = async (req, res) => {
       maxPrice,
       bedrooms,
       propertyType,
-      availabilityStatus,
+      availabilityStatus = '',
       sortBy = 'createdAt',
       sortOrder = 'desc',
       search,
       lat,
       lng,
-      radius = 10
+      radius = 10 // km
     } = req.query;
 
-    // Build search query
-    const searchQuery = { isActive: true };
+    const query = { isActive: true };
 
-    // Add price filters
+    // Price filter
     if (minPrice || maxPrice) {
-      searchQuery.price = {};
-      if (minPrice) searchQuery.price.$gte = Number(minPrice);
-      if (maxPrice) searchQuery.price.$lte = Number(maxPrice);
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
     }
 
-    // Add other filters
-    if (bedrooms) searchQuery.bedrooms = Number(bedrooms);
-    if (propertyType) searchQuery.propertyType = propertyType;
-    if (availabilityStatus) searchQuery.availabilityStatus = availabilityStatus;
+    // Other filters
+    if (bedrooms) query.bedrooms = Number(bedrooms);
+    if (propertyType) query.propertyType = propertyType;
+    if (availabilityStatus) query.availabilityStatus = availabilityStatus;
 
-    // Add text search
+    // Search in title and location
     if (search) {
-      searchQuery.$or = [
+      query.$or = [
         { title: { $regex: search, $options: 'i' } },
         { location: { $regex: search, $options: 'i' } },
         { description: { $regex: search, $options: 'i' } }
       ];
     }
 
-    // Add location search
+    // Location-based search
     if (lat && lng) {
-      const radiusInDegrees = radius / 111; // Rough conversion km to degrees
-      searchQuery['coordinates.latitude'] = {
-        $gte: Number(lat) - radiusInDegrees,
-        $lte: Number(lat) + radiusInDegrees
+      const radiusInRad = radius / 6371; // Earth's radius in km
+      query['coordinates.latitude'] = {
+        $gte: Number(lat) - radiusInRad,
+        $lte: Number(lat) + radiusInRad
       };
-      searchQuery['coordinates.longitude'] = {
-        $gte: Number(lng) - radiusInDegrees,
-        $lte: Number(lng) + radiusInDegrees
+      query['coordinates.longitude'] = {
+        $gte: Number(lng) - radiusInRad,
+        $lte: Number(lng) + radiusInRad
       };
     }
 
-    // Set up sorting
     const sortOptions = {};
     sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
 
-    // Get properties
-    const properties = await Property.find(searchQuery)
+    let properties = await Property.find(query)
       .populate('owner', 'name email phone')
       .sort(sortOptions)
-      .limit(Number(limit))
-      .skip((Number(page) - 1) * Number(limit));
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
 
-    // Add current tenant info (simplified)
-    const propertiesWithTenants = await addCurrentTenantInfo(properties);
+    // Attach currentTenant if active booking exists (start<=now<end and status approved or completed)
+    // or if approved future booking exists
+    const now = new Date();
+    const propIds = properties.map(p => p._id);
+    
+    // First get active bookings
+    const activeBookings = await Booking.find({
+      property: { $in: propIds },
+      startDate: { $lte: now },
+      endDate: { $gt: now },
+      status: { $in: ['approved', 'completed'] }
+    }).populate('tenant', 'name');
+    
+    // Then get approved future bookings for properties without active bookings
+    const propsWithActive = new Set(activeBookings.map(b => b.property.toString()));
+    const propsWithoutActive = propIds.filter(id => !propsWithActive.has(id.toString()));
+    
+    const futureBookings = await Booking.find({
+      property: { $in: propsWithoutActive },
+      startDate: { $gt: now },
+      status: 'approved'
+    }).populate('tenant', 'name');
+    
+    // Group future bookings by property and get earliest for each
+    const futureByProp = new Map();
+    futureBookings.forEach(b => {
+      const propId = b.property.toString();
+      if (!futureByProp.has(propId) || b.startDate < futureByProp.get(propId).startDate) {
+        futureByProp.set(propId, b);
+      }
+    });
+    
+    // Combine active and future bookings
+    const allBookings = [...activeBookings, ...Array.from(futureByProp.values())];
+    const byProp = new Map();
+    allBookings.forEach(b => byProp.set(b.property.toString(), b));
+    
+    properties = properties.map(p => {
+      const b = byProp.get(p._id.toString());
+      const obj = p.toObject();
+      if (b) obj.currentTenant = { id: b.tenant._id, name: b.tenant.name };
+      return obj;
+    });
 
-    // Get total count for pagination
-    const total = await Property.countDocuments(searchQuery);
+    const total = await Property.countDocuments(query);
 
     res.json({
       data: {
-        properties: propertiesWithTenants,
+        properties,
         pagination: {
           total,
           page: Number(page),
-          pages: Math.ceil(total / Number(limit)),
+          pages: Math.ceil(total / limit),
           limit: Number(limit)
         }
       }
@@ -98,41 +134,6 @@ export const getProperties = async (req, res) => {
   }
 };
 
-// Helper function to add current tenant information
-const addCurrentTenantInfo = async (properties) => {
-  if (!properties.length) return properties;
-
-  const now = new Date();
-  const propertyIds = properties.map(p => p._id);
-
-  // Find current active bookings
-  const activeBookings = await Booking.find({
-    property: { $in: propertyIds },
-    startDate: { $lte: now },
-    endDate: { $gt: now },
-    status: { $in: ['approved', 'completed'] }
-  }).populate('tenant', 'name');
-
-  // Create a map for quick lookup
-  const tenantMap = new Map();
-  activeBookings.forEach(booking => {
-    tenantMap.set(booking.property.toString(), {
-      id: booking.tenant._id,
-      name: booking.tenant.name
-    });
-  });
-
-  // Add tenant info to properties
-  return properties.map(property => {
-    const propertyObj = property.toObject();
-    const tenant = tenantMap.get(property._id.toString());
-    if (tenant) {
-      propertyObj.currentTenant = tenant;
-    }
-    return propertyObj;
-  });
-};
-
 // @desc Get top-rated properties (by average rating and review count)
 // @route GET /api/properties/top-rated
 // @access Public
@@ -140,52 +141,30 @@ export const getTopRatedProperties = async (req, res) => {
   try {
     const { limit = 6, minReviews = 1 } = req.query;
 
-    // Get property ratings using aggregation
-    const propertyRatings = await Review.aggregate([
-      { 
-        $group: { 
-          _id: '$property', 
-          averageRating: { $avg: '$rating' }, 
-          totalReviews: { $sum: 1 } 
-        } 
-      },
+    const agg = await Review.aggregate([
+      { $group: { _id: '$property', averageRating: { $avg: '$rating' }, totalReviews: { $sum: 1 } } },
       { $match: { totalReviews: { $gte: Number(minReviews) } } },
       { $sort: { averageRating: -1, totalReviews: -1 } },
       { $limit: Number(limit) }
     ]);
 
-    if (!propertyRatings.length) {
-      return res.json({ data: { properties: [] } });
-    }
+    const ids = agg.map(a => a._id);
+    const props = await Property.find({ _id: { $in: ids }, isActive: true })
+      .populate('owner', 'name email phone')
+      .lean();
 
-    // Get the actual property details
-    const propertyIds = propertyRatings.map(rating => rating._id);
-    const properties = await Property.find({ 
-      _id: { $in: propertyIds }, 
-      isActive: true 
-    }).populate('owner', 'name email phone');
+    const map = new Map(agg.map(a => [String(a._id), a]));
+    const properties = props.map(p => ({
+      ...p,
+      averageRating: map.get(String(p._id))?.averageRating || 0,
+      totalReviews: map.get(String(p._id))?.totalReviews || 0
+    }));
 
-    // Combine property data with ratings
-    const propertiesWithRatings = properties.map(property => {
-      const rating = propertyRatings.find(r => r._id.toString() === property._id.toString());
-      return {
-        ...property.toObject(),
-        averageRating: rating?.averageRating || 0,
-        totalReviews: rating?.totalReviews || 0
-      };
-    });
+    properties.sort((a, b) => (b.averageRating - a.averageRating) || (b.totalReviews - a.totalReviews));
 
-    // Sort by rating and review count
-    propertiesWithRatings.sort((a, b) => {
-      if (b.averageRating !== a.averageRating) {
-        return b.averageRating - a.averageRating;
-      }
-      return b.totalReviews - a.totalReviews;
-    });
-
-    res.json({ data: { properties: propertiesWithRatings } });
+    res.json({ data: { properties } });
   } catch (error) {
-    console.error('Get top-rated properties error:', error);
+    console.error('getTopRatedProperties error:', error);
     res.status(500).json({ message: 'Server error while fetching top-rated properties' });
   }
 };
@@ -195,34 +174,40 @@ export const getTopRatedProperties = async (req, res) => {
 // @access Public
 export const getProperty = async (req, res) => {
   try {
-    // Find the property
-    const property = await Property.findById(req.params.id)
+    const propertyDoc = await Property.findById(req.params.id)
       .populate('owner', 'name email phone profileImage');
 
-    if (!property) {
+    if (!propertyDoc) {
       return res.status(404).json({ message: 'Property not found' });
     }
 
-    // Find current tenant (if any)
+    // Compute currentTenant for this property
     const now = new Date();
-    const activeBooking = await Booking.findOne({
-      property: property._id,
+    let activeBooking = await Booking.findOne({
+      property: propertyDoc._id,
       startDate: { $lte: now },
       endDate: { $gt: now },
       status: { $in: ['approved', 'completed'] }
     }).populate('tenant', 'name');
 
-    // Convert to object and add tenant info
-    const propertyData = property.toObject();
+    // If no active booking, check for approved future booking
+    if (!activeBooking) {
+      activeBooking = await Booking.findOne({
+        property: propertyDoc._id,
+        startDate: { $gt: now },
+        status: 'approved'
+      }).sort({ startDate: 1 }).populate('tenant', 'name');
+    }
+
+    const property = propertyDoc.toObject();
     if (activeBooking) {
-      propertyData.currentTenant = {
-        id: activeBooking.tenant._id,
-        name: activeBooking.tenant.name
-      };
+      property.currentTenant = { id: activeBooking.tenant._id, name: activeBooking.tenant.name };
     }
 
     res.json({
-      data: { property: propertyData }
+      data: {
+        property
+      }
     });
 
   } catch (error) {
@@ -236,7 +221,8 @@ export const getProperty = async (req, res) => {
 // @access Private (Owner, Admin)
 export const createProperty = async (req, res) => {
   try {
-    // Create property with current user as owner
+    // Relaxed validation: accept payload as-is; user verification is handled via auth middleware
+
     const propertyData = {
       ...req.body,
       owner: req.user._id
@@ -245,13 +231,14 @@ export const createProperty = async (req, res) => {
     const property = new Property(propertyData);
     await property.save();
 
-    // Get the created property with owner details
-    const createdProperty = await Property.findById(property._id)
+    const populatedProperty = await Property.findById(property._id)
       .populate('owner', 'name email phone');
 
     res.status(201).json({
       message: 'Property created successfully',
-      data: { property: createdProperty }
+      data: {
+        property: populatedProperty
+      }
     });
 
   } catch (error) {
@@ -265,19 +252,19 @@ export const createProperty = async (req, res) => {
 // @access Private (Owner of property, Admin)
 export const updateProperty = async (req, res) => {
   try {
-    // Find the property first
+    // Relaxed validation: accept payload updates as-is; user/role verification remains enforced
+
     const property = await Property.findById(req.params.id);
 
     if (!property) {
       return res.status(404).json({ message: 'Property not found' });
     }
 
-    // Check if user owns this property or is admin
+    // Check ownership (middleware handles this, but double-check)
     if (req.user.role !== 'admin' && property.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    // Update the property
     const updatedProperty = await Property.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -286,7 +273,9 @@ export const updateProperty = async (req, res) => {
 
     res.json({
       message: 'Property updated successfully',
-      data: { property: updatedProperty }
+      data: {
+        property: updatedProperty
+      }
     });
 
   } catch (error) {
@@ -300,19 +289,18 @@ export const updateProperty = async (req, res) => {
 // @access Private (Owner of property, Admin)
 export const deleteProperty = async (req, res) => {
   try {
-    // Find the property
     const property = await Property.findById(req.params.id);
 
     if (!property) {
       return res.status(404).json({ message: 'Property not found' });
     }
 
-    // Check if user owns this property or is admin
+    // Check ownership
     if (req.user.role !== 'admin' && property.owner.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    // Soft delete by marking as inactive
+    // Soft delete by setting isActive to false
     await Property.findByIdAndUpdate(req.params.id, { isActive: false });
 
     res.json({ message: 'Property deleted successfully' });

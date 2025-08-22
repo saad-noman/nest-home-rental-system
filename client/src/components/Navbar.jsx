@@ -165,7 +165,7 @@ const Navbar = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={handleSearchFocus}
                   onBlur={handleSearchBlur}
-                  className="w-48 lg:w-64 xl:w-72 pl-4 pr-4 py-2 bg-white/80 dark:bg-neutral-800/80 border border-white/30 dark:border-neutral-700/50 rounded-full text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-transparent backdrop-blur-sm transition-all duration-200"
+                  className="w-48 lg:w-64 xl:w-72 pl-4 pr-4 py-2 bg-white/80 dark:bg-neutral-800/80 border border-white/30 dark:border-neutral-700/50 rounded-full text-sm placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-transparent backdrop-blur-sm transition-all duration-200"
                 />
               </div>
               {showSearchDropdown && (
@@ -268,8 +268,7 @@ const Navbar = () => {
                     )}
                   </button>
                   {showProfileMenu && (
-                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-neutral-900 border border-white/30 dark:border-neutral-700 rounded-xl shadow-lg overflow-hidden z-50"
-                         onMouseDown={(e) => e.stopPropagation()}>
+                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-neutral-900 border border-white/30 dark:border-neutral-700 rounded-xl shadow-lg overflow-hidden z-50">
                       <div className="px-4 py-3 border-b border-white/30 dark:border-neutral-700 flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center flex-shrink-0">
                           {user?.profileImage ? (
@@ -291,35 +290,24 @@ const Navbar = () => {
                         </div>
                       </div>
                       <div className="py-1">
-                        <Link
-                          to="/profile-status"
-                          onClick={() => setShowProfileMenu(false)}
-                          className="block w-full px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 text-left rounded-lg"
+                        <button
+                          onClick={() => { navigate('/profile-status'); setShowProfileMenu(false); }}
+                          className="w-full px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left"
                         >
                           Profile Status
-                        </Link>
-                        <Link
-                          to="/profile-settings"
-                          onClick={() => setShowProfileMenu(false)}
-                          className="block w-full px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 text-left rounded-lg"
+                        </button>
+                        <button
+                          onClick={() => { navigate('/profile-settings'); setShowProfileMenu(false); }}
+                          className="w-full px-4 py-2 text-sm text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-left"
                         >
                           Settings
-                        </Link>
-                        <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleLogout();
-                              setShowProfileMenu(false);
-                            }}
-                            className="w-full flex items-center px-4 py-2 text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg font-medium"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-                            </svg>
-                            Logout
-                          </button>
-                        </div>
+                        </button>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full px-4 py-2 text-sm text-error-700 dark:text-error-400 hover:bg-error-50/60 dark:hover:bg-error-900/20 text-left"
+                        >
+                          Logout
+                        </button>
                       </div>
                     </div>
                   )}
@@ -346,9 +334,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden px-3 py-2 rounded-full text-sm font-medium text-neutral-700 dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-900/80 transition-all duration-200 border border-transparent hover:border-cyan-200 dark:border-neutral-700"
-            aria-expanded={isMenuOpen}
-            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            className="md:hidden px-3 py-2 rounded-full text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-all duration-200"
           >
             {isMenuOpen ? 'Close' : 'Menu'}
           </button>
@@ -372,10 +358,11 @@ const Navbar = () => {
             <span className="block w-5 h-0.5 bg-white mx-auto rounded"></span>
           </button>
 
+          {/* Removed fixed profile menu in transformed state per request */}
+
           {/* Vertical menu panel opened by floating button */}
           {showFloatingMenu && (
-            <div className="fixed top-20 right-4 z-[55] w-64 max-h-[70vh] overflow-auto rounded-2xl border shadow-xl p-4 animate-slide-up bg-white/98 dark:bg-neutral-900/98 border-white/30 dark:border-neutral-700/70 backdrop-blur-xl"
-                 onMouseDown={(e) => e.stopPropagation()}>
+            <div className="fixed top-20 right-4 z-[55] w-64 max-h-[70vh] overflow-auto rounded-2xl border shadow-xl p-4 animate-slide-up bg-white/98 dark:bg-neutral-900/98 border-white/30 dark:border-neutral-700/70 backdrop-blur-xl">
               <div className="space-y-2">
                 <Link to="/" onClick={() => setShowFloatingMenu(false)} className="block px-3 py-2 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/50 text-sm font-medium text-neutral-900 dark:text-neutral-100">Home</Link>
                 <Link to="/properties" onClick={() => setShowFloatingMenu(false)} className="block px-3 py-2 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/50 text-sm font-medium text-neutral-900 dark:text-neutral-100">Properties</Link>
@@ -441,73 +428,72 @@ const Navbar = () => {
       )}
 
       {/* Mobile Menu */}
-      <div
-        className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setIsMenuOpen(false)}
-      >
-        <div
-          className={`mobile-menu fixed right-0 top-0 h-full w-4/5 max-w-sm bg-white dark:bg-neutral-900 shadow-2xl transform transition-transform duration-300 ease-in-out ${
-            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          } border-l border-neutral-200 dark:border-neutral-700`}
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Menu</h2>
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
-                aria-label="Close menu"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
+      {isMenuOpen && (
+        <div className="mobile-menu fixed top-16 left-4 right-4 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-neutral-700/50 p-6 z-40 md:hidden animate-slide-up">
+          {/* Mobile Search */}
+          <div className="mb-6">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full pl-4 pr-4 py-3 bg-neutral-100 dark:bg-neutral-800 rounded-xl border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
             </div>
           </div>
-          <nav className="p-2 space-y-1">
+
+          {/* Mobile Navigation Links */}
+          <div className="space-y-4">
             <Link
               to="/"
-              className="flex items-center px-4 py-3 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
               onClick={() => setIsMenuOpen(false)}
+              className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-cyan-600 dark:text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-              </svg>
               Home
             </Link>
             <Link
               to="/properties"
-              className="flex items-center px-4 py-3 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
               onClick={() => setIsMenuOpen(false)}
+              className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v16l-6-3-6 3V4z" clipRule="evenodd" />
-              </svg>
               Properties
             </Link>
             <Link
               to="/map"
-              className="flex items-center px-4 py-3 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
               onClick={() => setIsMenuOpen(false)}
+              className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-              </svg>
               Map
             </Link>
-            {user && user.role === 'tenant' && (
+            {user && (
+              <Link
+                to="/notifications"
+                onClick={() => setIsMenuOpen(false)}
+                className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
+              >
+                Notifications
+              </Link>
+            )}
+
+            <Link
+              to="/owners"
+              onClick={() => setIsMenuOpen(false)}
+              className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
+            >
+              Owners
+            </Link>
+            <Link
+              to="/tenants"
+              onClick={() => setIsMenuOpen(false)}
+              className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
+            >
+              Tenants
+            </Link>
+            {user?.role === 'tenant' && (
               <Link
                 to="/favourites"
                 onClick={() => setIsMenuOpen(false)}
-                className="flex items-center px-4 py-3 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
+                className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-rose-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                </svg>
                 Favourites
               </Link>
             )}
@@ -517,20 +503,14 @@ const Navbar = () => {
                 <Link
                   to="/dashboard"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center px-4 py-3 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
+                  className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                  </svg>
                   Dashboard
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center px-4 py-3 w-full text-left rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium"
+                  className="px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 w-full text-left font-medium text-error-600"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-                  </svg>
                   Logout
                 </button>
               </>
@@ -539,22 +519,16 @@ const Navbar = () => {
                 <Link
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center px-4 py-3 rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
+                  className="block px-4 py-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 font-medium"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                  </svg>
                   Login
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center justify-center px-4 py-3 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg font-medium transition-colors duration-200 mt-2"
+                  className="block px-4 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-all duration-200 font-medium text-center whitespace-nowrap inline-flex"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                  </svg>
-                  Sign Up
+                  {"Sign\u00A0Up"}
                 </Link>
               </>
             )}
@@ -565,24 +539,14 @@ const Navbar = () => {
                 toggleTheme();
                 setIsMenuOpen(false);
               }}
-              className="flex items-center px-4 py-3 w-full text-left rounded-lg text-neutral-800 dark:text-neutral-200 hover:bg-cyan-50 dark:hover:bg-neutral-800 font-medium"
+              className="p-3 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-200 w-full text-left"
               title={isDark ? 'Light Mode' : 'Dark Mode'}
             >
-              {isDark ? (
-                <>
-                  <Sun className="w-5 h-5 mr-3 text-amber-400" />
-                  Light Mode
-                </>
-              ) : (
-                <>
-                  <Moon className="w-5 h-5 mr-3 text-indigo-500" />
-                  Dark Mode
-                </>
-              )}
+              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-          </nav>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

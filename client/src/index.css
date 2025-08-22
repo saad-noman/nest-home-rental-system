@@ -21,7 +21,7 @@
 
 /* Form inputs */
 .form-input {
-  @apply w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200;
+  @apply w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
 }
 
 .dark .form-input {
@@ -34,7 +34,7 @@
 }
 
 .btn-primary {
-  @apply bg-cyan-600 text-white hover:bg-cyan-700 focus:ring-cyan-500;
+  @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
 }
 
 .btn-secondary {
@@ -42,7 +42,7 @@
 }
 
 .btn-outline {
-  @apply border border-neutral-300 text-neutral-700 hover:bg-neutral-50 focus:ring-cyan-500;
+  @apply border border-neutral-300 text-neutral-700 hover:bg-neutral-50 focus:ring-neutral-500;
 }
 
 .dark .btn-outline {
@@ -107,21 +107,21 @@
   @apply fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-full;
   @apply glass shadow-lg shadow-cyan-500/20;
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(34, 211, 238, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .dark .dynamic-island {
   @apply shadow-cyan-400/20;
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 /* Gradient text */
 .gradient-text {
-  @apply bg-gradient-to-r from-cyan-600 to-secondary-600 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent;
 }
 
 .dark .gradient-text {
-  @apply from-cyan-400 to-secondary-400;
+  @apply from-primary-400 to-secondary-400;
 }
 
 /* Custom animations */
@@ -182,7 +182,7 @@
 
 /* Focus visible for accessibility */
 .focus-visible:focus-visible {
-  @apply outline-none ring-2 ring-cyan-500 ring-offset-2;
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2;
 }
 
 .dark .focus-visible:focus-visible {
