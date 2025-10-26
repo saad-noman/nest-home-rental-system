@@ -74,6 +74,6 @@ nest-home-rental/
 
 ---
 
-## 🙌 Credit
+## Credit 🙌
 
-Developed by **Saad Noman Adeeb**.
+- Developed by **Saad Noman Adeeb**.
